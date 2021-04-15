@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PyRa.iml" filepath="$PROJECT_DIR$/PyRa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TestClient/TestClient.iml" filepath="$PROJECT_DIR$/TestClient/TestClient.iml" />
     </modules>
   </component>
 </project>

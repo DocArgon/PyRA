@@ -6,19 +6,16 @@ public class Main
 {
     private static ServerSocket serverSocket;
     private static Socket clientSocket;
-    private static boolean loop = true;
 
     public static void main(String[] args)
     {
         loadConfig();
         openSocket();
 
-        while(loop)
+        while(true)
         {
             listenForConnection();
         }
-
-        closeSocket();
     }
 
     private static void loadConfig()
@@ -39,19 +36,13 @@ public class Main
 
     private static void listenForConnection()
     {
+        System.out.println("Waiting for connection...");
         try
         { clientSocket = serverSocket.accept(); }
         catch (IOException e)
         { e.printStackTrace(); }
+        System.out.println("Client connected! Starting client thread...");
 
         new Thread(new ClientThread(clientSocket)).start();
-    }
-
-    private static void closeSocket()
-    {
-        try
-        { serverSocket.close(); }
-        catch (IOException e)
-        { e.printStackTrace(); }
     }
 }

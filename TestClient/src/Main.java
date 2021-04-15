@@ -14,8 +14,8 @@ public class Main
     {
         try
         {
-            startConnection("127.0.0.1", 9642);
-            System.out.println(sendMessage("Marco!"));
+            startConnection("jerzytest.tk", 9642);
+            System.out.println(sendMessage("test3;42;arg2"));
             stopConnection();
         }
         catch (IOException e)

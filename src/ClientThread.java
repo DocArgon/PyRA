@@ -9,7 +9,8 @@ public class ClientThread implements Runnable
     private OutputStream output;
 
     private String scriptName;
-    private String[] args;
+    private String args;
+    private byte[] scriptOutput;
 
     public ClientThread(Socket clientSocket)
     {
@@ -19,44 +20,72 @@ public class ClientThread implements Runnable
     @Override
     public void run()
     {
+        startConnection();
+
+        parseInput();
+
+        runScript();
+
+        sendOutput();
+
+        closeConnection();
+    }
+
+    private void startConnection()
+    {
         try
         {
-            //System.out.println("    Client thread connecting...");
-            startConnection();
-
-            //System.out.println("    Parsing input...");
-            parseInput(input);
-
-            output.write((scriptName+" "+args[0]).getBytes());
-
-            closeConnection();
-        } catch (IOException e)
+            input = clientSocket.getInputStream();
+            output = clientSocket.getOutputStream();
+        }
+        catch (IOException e)
         { e.printStackTrace(); }
     }
 
-    private void startConnection() throws IOException
-    {
-        input = clientSocket.getInputStream();
-        output = clientSocket.getOutputStream();
-    }
-
-    private void parseInput(InputStream input) throws IOException
+    private void parseInput()
     {
         byte[] buffer = new byte[1024];
-        int len = input.read(buffer);
+        int len = 0;
+        try
+        { len = input.read(buffer); }
+        catch (IOException e)
+        { e.printStackTrace(); }
 
-        String[] tempArray = new String(buffer).split(";");
+        String[] tempArray = new String(buffer).substring(0, len-1).split(";");
 
         scriptName = tempArray[0];
-        args = new String[tempArray.length-1];
-
-        System.arraycopy(tempArray, 1, args, 0, tempArray.length - 1);
+        args = tempArray[1];
     }
 
-    private void closeConnection() throws IOException
+    private void runScript()
     {
-        output.close();
-        input.close();
-        clientSocket.close();
+        try
+        {
+            Process p = Runtime.getRuntime().exec("python3 "+scriptName+" "+args);
+            scriptOutput = new byte[1024];
+            p.getInputStream().read(scriptOutput);
+        }
+        catch (IOException e)
+        { e.printStackTrace(); }
+    }
+
+    private void sendOutput()
+    {
+        try
+        { output.write(scriptOutput); }
+        catch (IOException e)
+        { e.printStackTrace(); }
+    }
+
+    private void closeConnection()
+    {
+        try
+        {
+            output.close();
+            input.close();
+            clientSocket.close();
+        }
+        catch (IOException e)
+        { e.printStackTrace(); }
     }
 }

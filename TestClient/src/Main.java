@@ -11,8 +11,8 @@ public class Main
     {
         try
         {
-            startConnection("localhost", 9642);
-            System.out.println(sendMessage("test.py;2 3 2"));
+            startConnection("jerzytest.tk", 9642);
+            System.out.println(sendMessage("test.py;4 3 2"));
             stopConnection();
         }
         catch (IOException e)

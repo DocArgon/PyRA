@@ -72,7 +72,7 @@ public class ClientThread implements Runnable
             {
                 byte[] scriptErrors = new byte[1024];
                 len = p.getErrorStream().read(scriptErrors);
-                if (len != 0)
+                if (len > 0)
                     System.out.println(new String(scriptErrors).substring(0, len));
             }
         }

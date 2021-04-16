@@ -1,5 +1,8 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
 
 public class Main
 {
@@ -7,16 +10,25 @@ public class Main
     private static OutputStream out;
     private static InputStream in;
 
+    private static ObjectOutputStream serialOut;
+
     public static void main(String[] args)
     {
         try
         {
             startConnection("jerzytest.tk", 9642);
-            System.out.println(sendMessage("test.py;4 3 2"));
+            DataBox msg = new DataBox(true, "skinsave.py", "Michal", loadImage("Michal.png"));
+            //sendObject(msg);
+            System.out.println(sendObject(msg));
             stopConnection();
         }
         catch (IOException e)
         { e.printStackTrace(); }
+    }
+
+    public static byte[] loadImage(String path) throws IOException
+    {
+        return Files.readAllBytes(new File("Michal.png").toPath());
     }
 
     public static void startConnection(String ip, int port) throws IOException
@@ -35,10 +47,23 @@ public class Main
         return new String(temp).substring(0, len);
     }
 
+    public static String sendObject(Object obj) throws IOException
+    {
+        serialOut = new ObjectOutputStream(out);
+        serialOut.writeObject(obj);
+        serialOut.flush();
+
+        byte[] temp = new byte[1024];
+        int len = in.read(temp);
+
+        return new String(temp).substring(0, len);
+    }
+
     public static void stopConnection() throws IOException
     {
         in.close();
         out.close();
+        serialOut.close();
         clientSocket.close();
     }
 }

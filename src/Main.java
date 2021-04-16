@@ -36,13 +36,19 @@ public class Main
 
     private static void listenForConnection()
     {
-        System.out.println("Waiting for connection...");
+        print("Waiting for connection...");
         try
         { clientSocket = serverSocket.accept(); }
         catch (IOException e)
         { e.printStackTrace(); }
-        System.out.println("Client connected! Starting client thread...");
+        print("Client connected! Starting client thread...");
 
         new Thread(new ClientThread(clientSocket)).start();
+    }
+
+    private static void print(String msg)
+    {
+        if(ConfigLoader.verbose)
+            System.out.println(msg);
     }
 }

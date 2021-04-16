@@ -11,8 +11,8 @@ public class Main
     {
         try
         {
-            startConnection("jerzytest.tk", 9642);
-            System.out.println(sendMessage("test.py;arg1 arg2 arg3"));
+            startConnection("localhost", 9642);
+            System.out.println(sendMessage("test.py;2 3 2"));
             stopConnection();
         }
         catch (IOException e)
@@ -30,9 +30,9 @@ public class Main
     {
         out.write(msg.getBytes());
         byte[] temp = new byte[1024];
-        in.read(temp);
+        int len = in.read(temp);
 
-        return new String(temp);
+        return new String(temp).substring(0, len);
     }
 
     public static void stopConnection() throws IOException

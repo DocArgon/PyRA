@@ -1,5 +1,3 @@
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -17,8 +15,7 @@ public class Main
         try
         {
             startConnection("jerzytest.tk", 9642);
-            DataBox msg = new DataBox(true, "skinsave.py", "Michal", loadImage("Michal.png"));
-            //sendObject(msg);
+            DataBox msg = new DataBox(true, "python3","skinsave.py", "Michal2", loadImage("Michal.png"));
             System.out.println(sendObject(msg));
             stopConnection();
         }

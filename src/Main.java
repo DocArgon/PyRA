@@ -49,6 +49,6 @@ public class Main
     private static void print(String msg)
     {
         if(ConfigLoader.verbose)
-            System.out.println(msg);
+            System.out.println("[Master]: "+msg);
     }
 }

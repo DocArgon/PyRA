@@ -1,10 +1,11 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.UUID;
 
 public class ClientThread implements Runnable
 {
     private final Socket clientSocket;
-    private final long id;
+    private final String uuid;
 
     private InputStream input;
     private OutputStream output;
@@ -16,7 +17,7 @@ public class ClientThread implements Runnable
     public ClientThread(Socket clientSocket)
     {
         this.clientSocket = clientSocket;
-        id = Thread.currentThread().getId();
+        uuid = UUID.randomUUID().toString();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ClientThread implements Runnable
             if(msgObject.isFile)
             {
                 print("Saving file...");
-                FileOutputStream fileOutput = new FileOutputStream(new File("file"+id));
+                FileOutputStream fileOutput = new FileOutputStream(new File("file"+ uuid));
                 fileOutput.write(msgObject.fileData);
                 fileOutput.close();
             }
@@ -71,7 +72,7 @@ public class ClientThread implements Runnable
         print("Running script...");
         try
         {
-            Process p = Runtime.getRuntime().exec(msgObject.interpreter+" "+msgObject.scriptName+" "+id+" "+msgObject.arguments);
+            Process p = Runtime.getRuntime().exec("./"+msgObject.scriptName+" "+ uuid +" "+msgObject.arguments);
             scriptOutput = readBuffer(p.getInputStream());
 
             if(ConfigLoader.errorReport)
@@ -111,7 +112,7 @@ public class ClientThread implements Runnable
     private void print(String msg)
     {
         if(ConfigLoader.verbose)
-            System.out.println(" [Thread "+id+"]: "+msg);
+            System.out.println(" [Thread "+ uuid +"]: "+msg);
     }
 
     private String readBuffer(InputStream inputStream) throws IOException
